@@ -9,10 +9,11 @@ import { serverUrl } from "../App";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners"
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 
 export default function SignUp() {
   const primaryColor = "#ff4d2d";
-  const hoverColor = "#e64323";
   const bgColor = "#fff9f6";
   const borderColor = "#ddd";
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +25,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handelSignUp = async () => {
     setLoading(true);
@@ -38,7 +40,7 @@ export default function SignUp() {
       const result = await axios.post(`${serverUrl}/api/auth/signup`, payload, {
         withCredentials: true,
       });
-      console.log(result);
+      dispatch(setUserData(result.data.user))
       setErr("");
       setLoading(false);
     } catch (error) {
@@ -64,7 +66,7 @@ export default function SignUp() {
         },
         { withCredentials: true }
       );
-      console.log(data);
+      dispatch(setUserData(data.user))
     } catch (error) {
       console.log(error);
     }

@@ -52,7 +52,7 @@ export const signIn = async (req, res) => {
        const token = await genToken(user._id);
        res.cookie("token", token, {secure:false, sameSite:"strict", maxAge: 7*24*60*60*1000, httpOnly:true});
 
-       return res.status(200).json({message: "User login successfully", user});
+       return res.status(200).json({message: "User login successfully", user, token});
 
     } catch (error) {
         return res.status(500).json({message: "Internal server error"});
