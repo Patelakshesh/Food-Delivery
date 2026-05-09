@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const itemSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    image: { type: String, required: true },
+    image: { type: String },
     shop: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shop",
@@ -26,7 +26,7 @@ const itemSchema = new mongoose.Schema(
       ],
     },
     price: { type: Number, min: 0, required: true },
-    foodType: { type: String, enum: ["Veg", "Non-Veg"], required: true },
+    foodType: { type: String, enum: ["veg", "non veg"], required: true },
     rating: {
       average: { type: Number, default: 0 },
       count: { type: Number, default: 0 },

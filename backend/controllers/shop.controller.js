@@ -23,7 +23,7 @@ export const createEditShop = async (req, res) => {
         return res.status(201).json({ message: 'Shop created successfully', shop
         })
     } catch (error) {
-        return res.status(500).json({ message: 'Server Error' });
+        return res.status(500).json({ message: "Server Error", error: error.message });
     }
 }
 
@@ -31,11 +31,11 @@ export const getMyShop = async (req, res) => {
     try {
         const shop = await Shop.findOne({owner:req.userId}).populate("items").populate({path: "items", options: { sort: { createdAt: -1 } }});
         if(!shop){
-            return null
+            return res.status(200).json({ shop: null })
         }
-        return res.status(200).json(shop)
+        return res.status(200).json({ shop })
     } catch (error) {
-        return res.status(500).json({ message: 'Server Error' });
+        return res.status(500).json({ message: "Server Error", error: error.message });
     }
 }
 
@@ -49,6 +49,25 @@ export const getShopByCity = async (req, res) => {
         }
         return res.status(200).json(shops)
     } catch (error) {
-        return res.status(500).json({ message: 'Server Error' });
+        return res.status(500).json({ message: "Server Error", error: error.message });
     }
 }
+
+export const getFeaturedShops = async (req, res) => {
+  try {
+    // Get random 10 shops from all cities as "featured"
+    // In production, you'd use ratings or popularity metrics
+    const shops = await Shop.aggregate([
+      { $sample: { size: 10 } }
+    ]);
+    
+    // Populate items
+    await Shop.populate(shops, { path: 'items', select: 'name image price category' });
+    
+    return res.status(200).json(shops);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
+  }
+};

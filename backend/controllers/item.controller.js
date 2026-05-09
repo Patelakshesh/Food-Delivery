@@ -13,6 +13,7 @@ export const addItem = async (req, res) => {
     if (!shop) {
       return res.status(400).json({ message: "shop not found" });
     }
+    console.log(shop, "shop");
     const item = await Item.create({
       name,
       image,
@@ -21,7 +22,6 @@ export const addItem = async (req, res) => {
       foodType,
       price,
     });
-
     shop.items.push(item._id);
     await shop.save();
     await shop.populate("owner");
@@ -32,7 +32,9 @@ export const addItem = async (req, res) => {
 
     return res.status(201).json({ message: "Item added successfully", shop });
   } catch (error) {
-    return res.status(500).json({ message: "Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
   }
 };
 
@@ -64,7 +66,9 @@ export const editItem = async (req, res) => {
     });
     return res.status(200).json({ message: "Item updated successfully", shop });
   } catch (error) {
-    return res.status(500).json({ message: "Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
   }
 };
 
@@ -77,7 +81,9 @@ export const getItemById = async (req, res) => {
     }
     return res.status(200).json(item);
   } catch (error) {
-    return res.status(500).json({ message: "Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
   }
 };
 
@@ -97,7 +103,9 @@ export const deleteItem = async (req, res) => {
     });
     return res.status(200).json({ message: "Item deleted successfully" }, shop);
   } catch (error) {
-    return res.status(500).json({ message: "Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
   }
 };
 
@@ -115,9 +123,30 @@ export const getItemByCity = async (req, res) => {
       return res.status(400).json({ message: "No shop found" });
     }
     const shopIds = shops.map((shop) => shop._id);
-    const items = await Item.find({ shop: { $in: shopIds } })
+    const items = await Item.find({ shop: { $in: shopIds } });
     return res.status(200).json(items);
   } catch (error) {
-    return res.status(500).json({ message: "Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
+  }
+};
+
+export const getTrendingItems = async (req, res) => {
+  try {
+    // Get random 20 items from all cities as "trending"
+    // In production, you'd track actual order counts
+    const items = await Item.aggregate([
+      { $sample: { size: 20 } }
+    ]);
+    
+    // Populate shop details
+    await Item.populate(items, { path: 'shop', select: 'name city state' });
+    
+    return res.status(200).json(items);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
   }
 };
