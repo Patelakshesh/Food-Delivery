@@ -151,8 +151,8 @@ export default function AddItem() {
               value={foodType}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              <option value="veg">veg</option>
-              <option value="non veg">non veg</option>
+              <option value="Veg">Veg</option>
+              <option value="Non-Veg">Non-Veg</option>
             </select>
           </div>
           <button disabled={loading} className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer">

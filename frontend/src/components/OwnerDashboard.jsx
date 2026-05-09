@@ -74,7 +74,8 @@ export default function OwnerDashboard() {
                     Add Your Food Items
                   </h2>
                   <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                    Share your delicious food with our customers by Adding them to menu.
+                    Share your delicious food with our customers by Adding them
+                    to menu.
                   </p>
                   <button
                     onClick={() => navigate("/add-item")}
@@ -87,11 +88,13 @@ export default function OwnerDashboard() {
             </div>
           )}
 
-          {myShopData.items.length > 0 && 
-          <div className="flex flex-col items-center gap-4 w-full max-w-3xl">{myShopData.items.map((item, index) => (
-            <OwnerItemCard key={index} data={item} />
-          ))}</div>
-          }
+          {myShopData.items.length > 0 && (
+            <div className="flex flex-col items-center gap-4 w-full max-w-3xl">
+              {myShopData.items.map((item, index) => (
+                <OwnerItemCard key={index} data={item} />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

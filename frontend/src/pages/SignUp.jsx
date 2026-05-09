@@ -8,7 +8,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
-import { ClipLoader } from "react-spinners"
+import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 
@@ -40,7 +40,7 @@ export default function SignUp() {
       const result = await axios.post(`${serverUrl}/api/auth/signup`, payload, {
         withCredentials: true,
       });
-      dispatch(setUserData(result.data.user))
+      dispatch(setUserData(result.data));
       setErr("");
       setLoading(false);
     } catch (error) {
@@ -66,7 +66,7 @@ export default function SignUp() {
         },
         { withCredentials: true }
       );
-      dispatch(setUserData(data.user))
+      dispatch(setUserData(data.user));
     } catch (error) {
       console.log(error);
     }
@@ -200,11 +200,11 @@ export default function SignUp() {
           </div>
         </div>
         <button
-        disabled={loading}
+          disabled={loading}
           onClick={handelSignUp}
           className={`w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white  hover:bg-[#e64323] cursor-pointer`}
         >
-          {loading ? <ClipLoader size={20} color="white"/> : "Sign Up"}
+          {loading ? <ClipLoader size={20} color="white" /> : "Sign Up"}
         </button>
 
         {err && <p className="text-red-500 text-center my[10px]">*{err}</p>}

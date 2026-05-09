@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
-import { ClipLoader } from "react-spinners"
+import { ClipLoader } from "react-spinners";
 
 export default function ForgetPassword() {
   const [step, setStep] = useState(1);
@@ -104,11 +104,11 @@ export default function ForgetPassword() {
               />
             </div>
             <button
-            disabled={loading}
+              disabled={loading}
               onClick={handleSendOtp}
               className={`w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white  hover:bg-[#e64323] cursor-pointer`}
             >
-              {loading ? <ClipLoader size={20} color="white"/> : "Send OTP"}
+              {loading ? <ClipLoader size={20} color="white" /> : "Send OTP"}
             </button>
             {err && <p className="text-red-500 text-center my[10px]">*{err}</p>}
           </div>
@@ -132,11 +132,11 @@ export default function ForgetPassword() {
               />
             </div>
             <button
-            disabled={loading}
+              disabled={loading}
               onClick={handleVerifyOtp}
               className={`w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white  hover:bg-[#e64323] cursor-pointer`}
             >
-              {loading ? <ClipLoader size={20} color="white"/> : "Verify"}
+              {loading ? <ClipLoader size={20} color="white" /> : "Verify"}
             </button>
             {err && <p className="text-red-500 text-center my[10px]">*{err}</p>}
           </div>
@@ -177,11 +177,15 @@ export default function ForgetPassword() {
               />
             </div>
             <button
-            disabled={loading}
+              disabled={loading}
               onClick={handleResetPasswordOtp}
               className={`w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 bg-[#ff4d2d] text-white  hover:bg-[#e64323] cursor-pointer`}
             >
-              {loading ? <ClipLoader size={20} color="white"/> : "Reset Password"}
+              {loading ? (
+                <ClipLoader size={20} color="white" />
+              ) : (
+                "Reset Password"
+              )}
             </button>
             {err && <p className="text-red-500 text-center my[10px]">*{err}</p>}
           </div>

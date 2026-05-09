@@ -22,7 +22,7 @@ export default function CreateEditShop() {
   const [frontendImage, setFrontendImage] = useState(myShopData?.image || null);
   const [backednImage, setBackendImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleImage = (e) => {
     const file = e.target.files[0];
     setBackendImage(file);
@@ -33,23 +33,27 @@ export default function CreateEditShop() {
     e.preventDefault();
     setLoading(true);
     try {
-        const formData = new FormData();
-        formData.append("name", name);
-        formData.append("city", city);
-        formData.append("state", state);
-        formData.append("address", address);
-        if(backednImage){
-            formData.append("image", backednImage);
-        }
-        const result = await axios.post(`${serverUrl}/api/shop/create-edit`, formData, {withCredentials: true});
-        dispatch(setMyShopData(result.data))
-        setLoading(false);
-        navigate("/");
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("city", city);
+      formData.append("state", state);
+      formData.append("address", address);
+      if (backednImage) {
+        formData.append("image", backednImage);
+      }
+      const result = await axios.post(
+        `${serverUrl}/api/shop/create-edit`,
+        formData,
+        { withCredentials: true }
+      );
+      dispatch(setMyShopData(result.data.shop));
+      setLoading(false);
+      navigate("/");
     } catch (error) {
-        console.log(error);
-        setLoading(false);
+      console.log(error);
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex justify-center flex-col items-center p-6 bg-gradient-to-br-from-orange-50 relative to-white min-h-screen">
@@ -140,8 +144,11 @@ export default function CreateEditShop() {
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
-          <button disabled={loading} className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer">
-            {loading ? <ClipLoader size={20} color="white"/> : "Save"}
+          <button
+            disabled={loading}
+            className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer"
+          >
+            {loading ? <ClipLoader size={20} color="white" /> : "Save"}
           </button>
         </form>
       </div>

@@ -13,13 +13,17 @@ export default function OwnerItemCard({ data }) {
 
   const handleDeleteItem = async () => {
     try {
-      await axios.delete(`${serverUrl}/api/item/delete/${data._id}` ,{withCredentials: true});
-      const shopResult = await axios.get(`${serverUrl}/api/shop/get-my`, { withCredentials: true });
+      await axios.delete(`${serverUrl}/api/item/delete/${data._id}`, {
+        withCredentials: true,
+      });
+      const shopResult = await axios.get(`${serverUrl}/api/shop/get-my`, {
+        withCredentials: true,
+      });
       dispatch(setMyShopData(shopResult.data)); // update Redux with full shop data
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <div className="flex bg-white rounded-lg shadow-md overflow-hidden border border-[#ff4d2d] w-full max-w-2xl">
       <div className="w-36 flex-shrink-0 bg-gray-50">
@@ -41,15 +45,19 @@ export default function OwnerItemCard({ data }) {
           </p>
         </div>
         <div className="flex justify-between items-center">
-          <div className="text-[#ff4d2d] font-bold">
-            {data.price}
-          </div>
+          <div className="text-[#ff4d2d] font-bold">{data.price}</div>
           <div className="flex items-center gap-2">
-            <div onClick={() => navigate(`/edit-item/${data._id}`)} className="p-2 rounded-full hover:bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer">
+            <div
+              onClick={() => navigate(`/edit-item/${data._id}`)}
+              className="p-2 rounded-full hover:bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer"
+            >
               <FaPen size={16} />
             </div>
-            <div onClick={handleDeleteItem} className="p-2 rounded-full hover:bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer">
-             <FaTrashAlt size={16}/>
+            <div
+              onClick={handleDeleteItem}
+              className="p-2 rounded-full hover:bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer"
+            >
+              <FaTrashAlt size={16} />
             </div>
           </div>
         </div>

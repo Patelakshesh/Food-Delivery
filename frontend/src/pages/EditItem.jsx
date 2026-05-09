@@ -54,17 +54,17 @@ export default function EditItem() {
       if (backednImage) {
         formData.append("image", backednImage);
       }
-     await axios.post(
-        `${serverUrl}/api/item/edit-item/${itemId}`,
-        formData,
-        { withCredentials: true }
-      );
+      await axios.post(`${serverUrl}/api/item/edit-item/${itemId}`, formData, {
+        withCredentials: true,
+      });
 
       // Refetch full shop data after edit to get all items updated
-    const shopResult = await axios.get(`${serverUrl}/api/shop/get-my`, { withCredentials: true });
-    dispatch(setMyShopData(shopResult.data)); // update Redux with full shop data
-    setLoading(false);
-    navigate("/");
+      const shopResult = await axios.get(`${serverUrl}/api/shop/get-my`, {
+        withCredentials: true,
+      });
+      dispatch(setMyShopData(shopResult.data)); // update Redux with full shop data
+      setLoading(false);
+      navigate("/");
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -183,12 +183,15 @@ export default function EditItem() {
               value={foodType}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              <option value="veg">veg</option>
-              <option value="non veg">non veg</option>
+              <option value="Veg">Veg</option>
+              <option value="Non-Veg">Non-Veg</option>
             </select>
           </div>
-          <button disabled = {loading} className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer">
-            {loading ? <ClipLoader size={20} color="white"/> : "Save"}
+          <button
+            disabled={loading}
+            className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer"
+          >
+            {loading ? <ClipLoader size={20} color="white" /> : "Save"}
           </button>
         </form>
       </div>
