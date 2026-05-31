@@ -1,5 +1,6 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { HashLoader } from "react-spinners";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -19,8 +20,10 @@ import OrderPlaced from "./pages/OrderPlaced";
 import MyOrders from "./pages/MyOrders";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import useUpdateLocation from "./hooks/useUpdateLocation";
+import AiChatbot from "./components/AiChatbot";
 
-export const serverUrl = "http://localhost:8000";
+// eslint-disable-next-line react-refresh/only-export-components
+export const serverUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 export default function App() {
   useGetCurrentUser();
   useUpdateLocation();
@@ -33,13 +36,15 @@ export default function App() {
 
   if (!isAuthReady) {
     return (
-      <div className="h-screen flex items-center justify-center font-bold text-2xl text-gray-500">
-        Loading...
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-[#fff9f6] animate-fadeIn">
+        <HashLoader color="#ff4d2d" size={45} />
+        <p className="mt-6 font-semibold text-gray-500 animate-pulse">Loading amazing food...</p>
       </div>
     );
   }
 
   return (
+    <>
     <Routes>
       <Route
         path="/signin"
@@ -86,5 +91,9 @@ export default function App() {
         element={userData ? <MyOrders /> : <Navigate to={"/signin"} />}
       />
     </Routes>
+    
+    {/* Global AI Chatbot for logged-in users */}
+    {userData && userData.role === "user" && <AiChatbot />}
+    </>
   );
 }

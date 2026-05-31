@@ -12,8 +12,8 @@ const userSlice = createSlice({
     shopInMyCity: null,
     itemsInMyCity: null,
     searchQuery: "",
-    cartItems: [],
-    totalAmount: 0,
+    cartItems: JSON.parse(localStorage.getItem("cartItems")) || [],
+    totalAmount: JSON.parse(localStorage.getItem("totalAmount")) || 0,
     myOrders: [],
     ordersViewed: false,
   },
@@ -42,6 +42,24 @@ const userSlice = createSlice({
     setShopInMyCity: (state, action) => {
       state.shopInMyCity = action.payload;
     },
+    updateShopStatus: (state, action) => {
+      if (state.shopInMyCity) {
+        const { shopId, isOpen } = action.payload;
+        const shop = state.shopInMyCity.find((s) => s._id === shopId);
+        if (shop) {
+          shop.isOpen = isOpen;
+        }
+      }
+    },
+    updateItemStatus: (state, action) => {
+      if (state.itemsInMyCity) {
+        const { itemId, isAvailable } = action.payload;
+        const item = state.itemsInMyCity.find((i) => i._id === itemId);
+        if (item) {
+          item.isAvailable = isAvailable;
+        }
+      }
+    },
     setItemsInMyCity: (state, action) => {
       state.itemsInMyCity = action.payload;
     },
@@ -58,6 +76,8 @@ const userSlice = createSlice({
         (sum, i) => sum + i.quantity * i.price,
         0,
       );
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem("totalAmount", JSON.stringify(state.totalAmount));
     },
     updateQuantity: (state, action) => {
       const { id, quantity } = action.payload;
@@ -69,6 +89,8 @@ const userSlice = createSlice({
         (sum, i) => sum + i.quantity * i.price,
         0,
       );
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem("totalAmount", JSON.stringify(state.totalAmount));
     },
     removeCartItem: (state, action) => {
       const id = action.payload;
@@ -77,6 +99,14 @@ const userSlice = createSlice({
         (sum, i) => sum + i.quantity * i.price,
         0,
       );
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem("totalAmount", JSON.stringify(state.totalAmount));
+    },
+    clearCart: (state) => {
+      state.cartItems = [];
+      state.totalAmount = 0;
+      localStorage.removeItem("cartItems");
+      localStorage.removeItem("totalAmount");
     },
     setMyOrders: (state, action) => {
       state.myOrders = action.payload;
@@ -106,6 +136,8 @@ export const {
   setLocationBlocked,
   setSearchQuery,
   setShopInMyCity,
+  updateShopStatus,
+  updateItemStatus,
   setItemsInMyCity,
   addToCart,
   updateQuantity,
@@ -114,5 +146,6 @@ export const {
   setOrdersViewed,
   addMyOrder,
   updateOrderStatus,
+  clearCart,
 } = userSlice.actions;
 export default userSlice.reducer;
