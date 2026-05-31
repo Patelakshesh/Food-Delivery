@@ -11,6 +11,8 @@ const shopSchema = new mongoose.Schema({
     city: {type: String, required: true},
     state: {type: String, required: true},
     address: {type: String, required: true},
+    rating: {type: Number, default: 0},
+    isOpen: {type: Boolean, default: true}, // Tracks if shop is accepting orders
     items: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Item"

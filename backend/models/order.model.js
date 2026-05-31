@@ -22,8 +22,8 @@ const shopOrderSchema = new Mongoose.Schema(
     shopOrderItems: [shopOrderItemsSchema],
     status: {
       type: String,
-      enum: ["Pending", "Preparing", "Out Of Delivery", "Delivered"],
-      default: "Pending",
+      enum: ["Pending", "pending", "Preparing", "preparing", "Out Of Delivery", "picked", "Delivered", "delivered", "Cancelled", "cancelled"],
+      default: "pending",
     },
     assignment: { type: Mongoose.Schema.Types.ObjectId, ref: "DeliveryAssignment", default: null },
     assignedDeliveryBoy: { type: Mongoose.Schema.Types.ObjectId, ref: "User"},
@@ -35,6 +35,7 @@ const orderSchema = new Mongoose.Schema(
   {
     user: { type: Mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     paymentMethod: { type: String, enum: ["cod", "online"], required: true },
+    paymentId: { type: String }, // Stores Razorpay Payment ID for refunds
     deliveryAddress: {
       text: { type: String, required: true },
       latitude: { type: Number, required: true },

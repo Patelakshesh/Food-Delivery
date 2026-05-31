@@ -1,6 +1,8 @@
 import Item from "../models/item.model.js";
 import Shop from "../models/shop.model.js";
 import uploadOnCloudinary from "../utilis/cloudinary.js";
+import { getIo } from "../socket.js";
+import { generateEmbedding } from "../utilis/embedding.js";
 
 export const addItem = async (req, res) => {
   try {
@@ -14,6 +16,11 @@ export const addItem = async (req, res) => {
       return res.status(400).json({ message: "shop not found" });
     }
     console.log(shop, "shop");
+
+    // Generate vector embedding for RAG
+    const textToEmbed = `${name} - ${category} - ${foodType}`;
+    const embedding = await generateEmbedding(textToEmbed);
+
     const item = await Item.create({
       name,
       image,
@@ -21,6 +28,7 @@ export const addItem = async (req, res) => {
       category,
       foodType,
       price,
+      embedding: embedding.length > 0 ? embedding : undefined, // Save embedding
     });
     shop.items.push(item._id);
     await shop.save();
@@ -38,6 +46,27 @@ export const addItem = async (req, res) => {
   }
 };
 
+export const toggleItemStatus = async (req, res) => {
+  try {
+    const itemId = req.params.itemId;
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+    
+    // Toggle the availability
+    item.isAvailable = item.isAvailable === false ? true : false;
+    await item.save();
+    
+    // Broadcast real-time update
+    getIo().emit("itemStatusChanged", { itemId: item._id, isAvailable: item.isAvailable });
+    
+    return res.status(200).json({ message: `Item is now ${item.isAvailable ? 'In Stock' : 'Out of Stock'}`, isAvailable: item.isAvailable });
+  } catch (error) {
+    return res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
 export const editItem = async (req, res) => {
   try {
     const itemId = req.params.itemId;
@@ -46,15 +75,26 @@ export const editItem = async (req, res) => {
     if (req.file) {
       image = await uploadOnCloudinary(req.file.path);
     }
+    
+    // Update vector embedding for RAG
+    const textToEmbed = `${name} - ${category} - ${foodType}`;
+    const embedding = await generateEmbedding(textToEmbed);
+    
+    const updateData = {
+      name,
+      image,
+      category,
+      foodType,
+      price,
+    };
+    
+    if (embedding.length > 0) {
+      updateData.embedding = embedding;
+    }
+
     const item = await Item.findByIdAndUpdate(
       itemId,
-      {
-        name,
-        image,
-        category,
-        foodType,
-        price,
-      },
+      updateData,
       { new: true }
     );
     if (!item) {
