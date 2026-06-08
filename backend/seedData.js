@@ -7,8 +7,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const MONGODB_URL = process.env.MONGODB_URL || "mongodb+srv://etce202_db_user:etc123@cluster0.catdt2l.mongodb.net/food-delivary";
-
+const MONGODB_URL = process.env.MONGODB_URL
 const seed = async () => {
   try {
     await mongoose.connect(MONGODB_URL);
